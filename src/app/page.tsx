@@ -26,7 +26,7 @@ export default function Home() {
         <CustomCursor />
         <BackgroundEffects />
         <Header />
-        
+
         <main className="relative z-10 w-full overflow-x-clip">
           <Hero />
           <About />
@@ -41,7 +41,7 @@ export default function Home() {
           <FAQ />
           <Contact />
         </main>
-        
+
         <Footer />
       </SmoothScroll>
     </ThemeProvider>

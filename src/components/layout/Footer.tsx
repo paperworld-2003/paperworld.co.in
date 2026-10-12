@@ -30,21 +30,27 @@ export default function Footer() {
           <div className="lg:col-span-5 flex flex-col gap-6">
             <a
               href="#hero"
-              className="flex items-center gap-2 self-start"
+              className="inline-flex items-center gap-3 self-start group"
               aria-label="Go to top"
             >
-              <Image
-                src="/logo.png"
-                alt="Paper World Logo"
-                width={120}
-                height={48}
-                className="object-contain"
-                priority
-              />
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center p-1 shadow-sm overflow-hidden shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="Paper World Logo"
+                  width={44}
+                  height={44}
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <span className="font-brand font-black text-xl md:text-2xl tracking-widest uppercase select-none transition-transform duration-300 group-hover:scale-105">
+                <span className="text-primary">PAPER</span>{" "}
+                <span className="text-foreground">WORLD</span>
+              </span>
             </a>
             <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
-              PAPER WORLD is a leading paper bag manufacturing company in Bangalore, India.
-              For over 17 years, we have been dedicated to manufacturing and exporting custom 
+              <span className="font-brand font-black tracking-wider uppercase"><span className="text-primary">PAPER</span> <span className="text-foreground">WORLD</span></span> is a leading paper bag manufacturing company in Bangalore, India.
+              For over 23 years, we have been dedicated to manufacturing and exporting custom 
               shopping paper bags for retail, fashion, luxury brands, corporate conferences, 
               events, and food industries. We deliver sustainable elegance, tailored to your budget.
             </p>
@@ -168,7 +174,7 @@ export default function Footer() {
 
         {/* Bottom copyright and Scroll-to-top */}
         <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} PAPER WORLD. All Rights Reserved. Crafted with care.</p>
+          <p>© {new Date().getFullYear()} <span className="font-brand font-black uppercase tracking-wider"><span className="text-primary">PAPER</span> <span className="text-foreground">WORLD</span></span>. All Rights Reserved. Crafted with care.</p>
           <div className="flex items-center gap-4 flex-wrap">
             <a
               href="https://vyome.vercel.app"

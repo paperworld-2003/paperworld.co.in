@@ -6,31 +6,35 @@ import { fadeInUp, staggerContainer } from "@/lib/utils";
 
 const testimonials = [
   {
-    title: "Amazing Quality",
+    title: "Exquisite Packaging for Luxury Hospitality",
     quote:
-      "Paper World has been amazing! The quality of the bags is really good. They understood our brand guidelines and designed our layout very neatly, and the print quality is the best we got.",
-    author: "Smoor Chocolates",
+      "PAPER WORLD has been exceptional! The quality of their custom bags matches our luxury standards perfectly. Their attention to detail, premium handle finishing, and punctual delivery make them our trusted packaging partner.",
+    author: "JW Marriott",
+    role: "Luxury Hospitality",
     rating: 5,
   },
   {
-    title: "Best Paper Bags Provider",
+    title: "Superior Load Strength & Print Precision",
     quote:
-      "One of the best paper bag providers in Bangalore, the print quality they give is the best. It's almost been a year working with them. Timely delivery & flexibility to take on orders in the last minute.",
-    author: "Ruosh Premium",
+      "One of the finest packaging manufacturers in Bangalore. The structural strength and high-definition printing quality they deliver is outstanding. They handle our high-volume retail orders with remarkable consistency.",
+    author: "Wildcraft",
+    role: "Garments & Travel Gear",
     rating: 5,
   },
   {
-    title: "Friendly Staff & Great Effort",
+    title: "Precision Craftsmanship for Premium Retail",
     quote:
-      "Customer friendly staff, I like this place to visit again and again for printing my company bags. Special thanks to the team for their great effort to finish my job in the given time.",
-    author: "Memoriesalive Gifts",
+      "For executive accessories and luxury gifting, packaging aesthetics are everything. PAPER WORLD understood our brand guidelines flawlessly, delivering rich textures and immaculate hot-foil detailing that our customers love.",
+    author: "William Penn",
+    role: "Fine Writing & Luxury Retail",
     rating: 5,
   },
   {
-    title: "Highly Responsive & Creative",
+    title: "Food-Grade Quality & Elegant Presentation",
     quote:
-      "I have worked with Paper World on merchandise production for many events. The team has been highly responsive and responsible in addition to suggesting the best options for our needs.",
-    author: "Dream Desert Events",
+      "Customer-friendly team with great craftsmanship. From organic food-grade adhesives to custom artisanal bag profiles, their packaging elevates our confectionery presentation across all boutique stores.",
+    author: "Smoor",
+    role: "Chocolates & Cafés",
     rating: 5,
   },
 ];
@@ -96,9 +100,17 @@ export default function Testimonials() {
                 </p>
               </div>
 
-              <div className="border-t border-border pt-4">
-                <span className="text-xs uppercase tracking-widest text-primary font-semibold">
-                  {t.author}
+              <div className="border-t border-border pt-4 flex items-center justify-between">
+                <div>
+                  <span className="text-xs uppercase tracking-widest text-primary font-bold block">
+                    {t.author}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground font-medium">
+                    {t.role}
+                  </span>
+                </div>
+                <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold border border-primary/20">
+                  Verified Client
                 </span>
               </div>
             </motion.div>

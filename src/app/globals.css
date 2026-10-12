@@ -21,10 +21,132 @@
 
   --font-heading: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-brand: var(--font-trench), "Trench", sans-serif;
+  --font-paperworld: var(--font-trench), "Trench", sans-serif;
+}
+
+@font-face {
+  font-family: "Trench";
+  src: url("/fonts/trench100free.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.brand-header-logo {
+  font-family: var(--font-trench), "Trench", sans-serif !important;
+  font-weight: 900 !important;
+  -webkit-text-stroke: 1.1px currentColor !important;
+  paint-order: stroke fill;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .brand-header-logo {
+    -webkit-text-stroke: 1.35px currentColor !important;
+  }
+}
+
+.font-brand,
+.font-paperworld {
+  font-family: var(--font-trench), "Trench", sans-serif;
+  font-weight: 900;
+  -webkit-text-stroke: 0.85px currentColor;
+  paint-order: stroke fill;
+}
+
+/* ── Hero Adaptive Glassmorphism ── */
+.hero-glass-container {
+  background:
+    linear-gradient(135deg,
+      rgba(255, 255, 255, 0.88) 0%,
+      rgba(255, 255, 255, 0.76) 50%,
+      rgba(255, 255, 255, 0.84) 100%
+    ) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.18),
+    0  0   30px rgba(255, 255, 255, 0.40),
+    inset 0  2px 4px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.05) !important;
+  color: #000000 !important;
+}
+
+.hero-glass-pill {
+  background:
+    linear-gradient(135deg,
+      rgba(255, 255, 255, 0.90) 0%,
+      rgba(255, 255, 255, 0.78) 50%,
+      rgba(255, 255, 255, 0.85) 100%
+    ) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.10),
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.95) !important;
+  color: #000000 !important;
+}
+
+/* ── Bottom Bar Brand Pill: slightly denser tint for text readability ── */
+.hero-glass-pill-readable {
+  background:
+    linear-gradient(135deg,
+      rgba(0, 0, 0, 0.38) 0%,
+      rgba(0, 0, 0, 0.22) 50%,
+      rgba(0, 0, 0, 0.30) 100%
+    ) !important;
+  backdrop-filter: blur(135px) saturate(340%) brightness(0.90) !important;
+  -webkit-backdrop-filter: blur(135px) saturate(340%) brightness(0.90) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.30),
+    inset 0 1px 2px rgba(255, 255, 255, 0.20) !important;
+  color: #ffffff !important;
+}
+
+.hero-white-title-glow {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ── Universal hero text contrast — permanent black text readable in light & dark mode ── */
+.hero-text-contrast {
+  color: #000000 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.45) !important;
+}
+
+.hero-text-contrast-sm {
+  color: #000000 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.35) !important;
+}
+
+/* ── Hero Headline Typography (Strict fit inside glass container) ── */
+.hero-headline {
+  font-size: 1.35rem !important; /* ~21.6px */
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+}
+
+@media (min-width: 640px) {
+  .hero-headline {
+    font-size: 1.5rem !important; /* 24px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-headline {
+    font-size: 1.65rem !important; /* 26.4px */
+  }
 }
 
 /* ── Light Theme (Default) ── */
 :root {
+  color-scheme: light;
   --background: #FAF9F6;
   --foreground: #1C1917;
   --primary: #D97028;
@@ -48,6 +170,7 @@
 
 /* ── Dark Theme ── */
 [data-theme="dark"] {
+  color-scheme: dark;
   --background: #0C0A09;
   --foreground: #FAFAF9;
   --primary: #F0A060;
@@ -86,23 +209,25 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Typography ── */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  color: var(--foreground);
-}
+/* ── Typography Defaults (in @layer base so utility and component classes take precedence) ── */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--foreground);
+  }
 
-h1 { font-size: clamp(2.75rem, 5.5vw, 5rem); }
-h2 { font-size: clamp(2.25rem, 4.5vw, 3.75rem); }
-h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
-h4 { font-size: clamp(1.25rem, 2vw, 1.5rem); }
+  h1 { font-size: clamp(2.75rem, 5.5vw, 5rem); }
+  h2 { font-size: clamp(2.25rem, 4.5vw, 3.75rem); }
+  h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+  h4 { font-size: clamp(1.25rem, 2vw, 1.5rem); }
 
-p {
-  line-height: 1.75;
-  color: var(--muted-foreground);
+  p {
+    line-height: 1.75;
+    color: var(--muted-foreground);
+  }
 }
 
 /* ── Selection ── */
@@ -112,8 +237,18 @@ p {
 }
 
 /* ── Scrollbar ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 162, 158, 0.35) transparent;
+}
+
+[data-theme="dark"] * {
+  scrollbar-color: rgba(240, 160, 96, 0.25) transparent;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -122,10 +257,46 @@ p {
 
 ::-webkit-scrollbar-thumb {
   background: var(--warm-gray);
-  border-radius: 3px;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* ── Utility: Scrollbar None (Hidden cross-browser) ── */
+.scrollbar-none {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* ── Utility: Scrollbar Thin (Subtle modern trackless) ── */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(217, 112, 40, 0.3) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(217, 112, 40, 0.3);
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
 }
 
@@ -160,10 +331,8 @@ p {
 
 /* ── Section Padding ── */
 .section-padding {
-  padding-top: clamp(8rem, 16vh, 12rem);
-  padding-bottom: clamp(8rem, 16vh, 12rem);
-  padding-left: clamp(2rem, 6vw, 6rem);
-  padding-right: clamp(2rem, 6vw, 6rem);
+  padding-top: clamp(6rem, 12vh, 12rem);
+  padding-bottom: clamp(6rem, 12vh, 12rem);
   width: 100%;
 }
 
@@ -173,8 +342,8 @@ p {
   max-width: 1360px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: clamp(2rem, 5vw, 4rem);
-  padding-right: clamp(2rem, 5vw, 4rem);
+  padding-left: clamp(1.25rem, 5vw, 4rem);
+  padding-right: clamp(1.25rem, 5vw, 4rem);
 }
 
 /* ── Smooth Theme Transitions ── */
@@ -202,7 +371,8 @@ p {
 
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.animate-marquee):not(.animate-marquee-reverse),
+  *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -212,16 +382,27 @@ p {
 
 /* ── Marquee Animation ── */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 .animate-marquee {
-  animation: marquee 35s linear infinite;
+  animation: marquee 45s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+.animate-marquee-reverse {
+  animation: marquee-reverse 45s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
 }
 
 /* ── Scroll Indicator Bounce ── */

@@ -67,9 +67,10 @@ export default function LoadingScreen() {
                 initial={{ y: 50 }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="font-heading font-bold text-xl tracking-[0.25em] text-foreground uppercase"
+                className="font-brand font-black text-2xl md:text-4xl tracking-[0.25em] uppercase"
               >
-                Paper World
+                <span className="text-primary">PAPER</span>{" "}
+                <span className="text-foreground">WORLD</span>
               </motion.h1>
             </div>
 

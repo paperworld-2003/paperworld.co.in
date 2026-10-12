@@ -97,20 +97,28 @@ export default function Header() {
           <a
             href="#hero"
             onClick={() => handleNavClick("hero")}
-            className={cn(
-              "relative z-10 flex items-center justify-center bg-white rounded-full overflow-hidden shadow-sm shrink-0 transition-all duration-500",
-              isScrolled ? "w-10 h-10" : "w-12 h-12"
-            )}
+            className="flex items-center gap-2.5 sm:gap-3 group shrink-0"
             aria-label="Go to homepage"
           >
-            <Image
-              src="/logo.png"
-              alt="Paper World Logo"
-              width={isScrolled ? 40 : 50}
-              height={isScrolled ? 40 : 50}
-              className="transition-all duration-500 object-contain"
-              priority
-            />
+            <div
+              className={cn(
+                "relative z-10 flex items-center justify-center bg-white rounded-full overflow-hidden shadow-sm shrink-0 transition-all duration-500",
+                isScrolled ? "w-9 h-9" : "w-11 h-11"
+              )}
+            >
+              <Image
+                src="/logo.png"
+                alt="Paper World Logo"
+                width={isScrolled ? 36 : 46}
+                height={isScrolled ? 36 : 46}
+                className="transition-all duration-500 object-contain"
+                priority
+              />
+            </div>
+            <span className="brand-header-logo font-brand font-black text-lg sm:text-xl md:text-2xl tracking-wider uppercase select-none transition-transform duration-300 group-hover:scale-105">
+              <span className="text-primary font-black">PAPER</span>{" "}
+              <span className="text-foreground font-black">WORLD</span>
+            </span>
           </a>
 
           {/* Desktop Navigation */}

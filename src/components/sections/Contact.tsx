@@ -158,7 +158,7 @@ export default function Contact() {
                   <div>
                     <h4 className="text-sm font-heading font-bold text-foreground mb-1">Direct Sales Helpline</h4>
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      +91 9886699009 | +91 8884984499 | +91 80 23118088
+                      +91 9886699009 | +91 8884984499
                     </p>
                   </div>
                 </div>

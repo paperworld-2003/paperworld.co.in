@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import GlobalBackground from "@/components/layout/GlobalBackground";
 
@@ -12,6 +13,12 @@ const inter = Inter({
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const trench = localFont({
+  src: "./fonts/trench100free.otf",
+  variable: "--font-trench",
   display: "swap",
 });
 
@@ -34,7 +41,7 @@ export const metadata: Metadata = {
     url: "https://paperworld.co.in",
     title: "Paper World",
     description:
-      "Premium eco-friendly shopping paper bags manufactured in Bangalore, India. 17+ years of manufacturing quality packaging.",
+      "Premium eco-friendly shopping paper bags manufactured in Bangalore, India. 23+ years of manufacturing quality packaging.",
     siteName: "Paper World",
   },
   twitter: {
@@ -59,7 +66,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${outfit.variable} h-full antialiased`}
+      className={`${inter.variable} ${outfit.variable} ${trench.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
