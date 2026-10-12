@@ -23,7 +23,8 @@ const trench = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Paper World",
+  metadataBase: new URL("https://paperworld.co.in"),
+  title: "Paper World - Premium Eco-Friendly Paper Bags Manufacturer",
   description:
     "Premium eco-friendly shopping paper bags manufactured in Bangalore, India. Customizable size, thickness (GSM), handles, and finishes for retail, food, luxury, and gifting brands.",
   keywords: [

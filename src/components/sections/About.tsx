@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import {
   Target,
   Eye,
@@ -208,10 +209,12 @@ export default function About() {
             className="lg:col-span-5 relative"
           >
             <div className="relative aspect-[4/5] w-full rounded-3xl overflow-hidden bg-beige border border-border shadow-2xl">
-              <img
-                src="/products/about-right-design.png"
+              <Image
+                src="/products/about-right-design.webp"
                 alt="Paper World bespoke luxury paper shopping bags display"
-                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover transition-transform duration-500 hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>

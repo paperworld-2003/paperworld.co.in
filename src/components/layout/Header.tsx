@@ -84,7 +84,7 @@ export default function Header() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
         className={cn(
           "fixed left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 w-[95%] max-w-6xl rounded-full",
           isScrolled

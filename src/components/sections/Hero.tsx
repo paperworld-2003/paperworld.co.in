@@ -20,7 +20,7 @@ interface SlideData {
 const slides: SlideData[] = [
   {
     id: 1,
-    image: "/hero/heroImage1.png",
+    image: "/hero/heroImage1.webp",
     tagline: "LUXURY PACKAGING",
     titleLine1: "Crafting Luxury",
     titleLine2: "Paper Bags",
@@ -36,7 +36,7 @@ const slides: SlideData[] = [
   },
   {
     id: 2,
-    image: "/hero/heroImage2.png",
+    image: "/hero/heroImage2.webp",
     tagline: "100% ECO-FRIENDLY",
     titleLine1: "Sustainable",
     titleLine2: "Zero Plastic",
@@ -52,7 +52,7 @@ const slides: SlideData[] = [
   },
   {
     id: 3,
-    image: "/hero/heroImage3.png",
+    image: "/hero/heroImage3.webp",
     tagline: "WHOLESALE SCALE",
     titleLine1: "Manufacturing",
     titleLine2: "At Scale",
@@ -165,6 +165,7 @@ export default function Hero() {
                         priority={idx === 0}
                         className="object-cover object-center w-full h-full brightness-[1.05] contrast-[1.10]"
                         sizes="(max-width: 768px) 100vw, 450px"
+                        quality={82}
                       />
                     </motion.div>
                   </motion.div>
@@ -367,7 +368,7 @@ export default function Hero() {
                     priority={idx === 0}
                     className="object-cover object-center w-full h-full brightness-[1.08] contrast-[1.12] saturate-[1.10]"
                     sizes="100vw"
-                    quality={95}
+                    quality={82}
                   />
                 </motion.div>
               </motion.div>

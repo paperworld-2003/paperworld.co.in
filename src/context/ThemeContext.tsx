@@ -32,13 +32,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem("pw-theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-    // Add transition class briefly
+    try {
+      localStorage.setItem("pw-theme", newTheme);
+    } catch {}
     document.documentElement.classList.add("theme-transition");
-    setTimeout(() => {
+    document.documentElement.setAttribute("data-theme", newTheme);
+    window.setTimeout(() => {
       document.documentElement.classList.remove("theme-transition");
-    }, 600);
+    }, 250);
   }, []);
 
   const toggleTheme = useCallback(() => {
