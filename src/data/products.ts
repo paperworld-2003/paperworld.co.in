@@ -17,6 +17,14 @@ export interface Product {
   customizationOptions: string[];
 }
 
+export const standardDimensions: string[] = [
+  "X-Small - 9” x 7” x 3”",
+  "Small - 11” x 8” x 4”",
+  "Medium - 14” x 11” x 4”",
+  "Big - 15.5” x 12” x 5”",
+  "Large - 14” x 18” x 5.5”",
+];
+
 export const products: Product[] = [
   {
     slug: "ready-to-deliver",
@@ -34,7 +42,7 @@ export const products: Product[] = [
     specifications: {
       paperTypes: ["Brown Kraft", "White Kraft"],
       gsm: ["150 GSM", "180 GSM", "200 GSM"],
-      sizes: ["Small (8×10×4)", "Medium (12×16×4)", "Large (16×22×6)"],
+      sizes: standardDimensions,
       handles: ["Twist Handle", "Flat Handle"],
       printing: ["Plain", "Single Color"],
       finishes: ["Matte", "Natural"],
@@ -62,9 +70,9 @@ export const products: Product[] = [
     specifications: {
       paperTypes: ["Virgin Brown Kraft", "Recycled Brown Kraft"],
       gsm: ["120 GSM", "150 GSM", "180 GSM", "200 GSM", "230 GSM"],
-      sizes: ["Custom sizes available", "Small to Extra Large"],
+      sizes: standardDimensions,
       handles: ["Paper Twist", "Flat Paper", "Cotton Rope", "Ribbon"],
-      printing: ["Flexo", "Offset", "Screen", "Digital"],
+      printing: ["Offset", "Screen", "Digital"],
       finishes: ["Natural", "Matte Lamination", "Spot UV"],
     },
     applications: [
@@ -98,7 +106,7 @@ export const products: Product[] = [
     specifications: {
       paperTypes: ["Bleached White Kraft"],
       gsm: ["150 GSM", "180 GSM", "200 GSM", "230 GSM"],
-      sizes: ["Custom sizes available"],
+      sizes: standardDimensions,
       handles: [
         "Paper Twist",
         "Flat Paper",
@@ -107,7 +115,6 @@ export const products: Product[] = [
         "Satin Ribbon",
       ],
       printing: [
-        "Flexo",
         "Offset",
         "Screen",
         "Digital",
@@ -145,18 +152,22 @@ export const products: Product[] = [
     ],
     specifications: {
       paperTypes: [
-        "Art Paper",
-        "Ivory Board",
-        "High GSM Kraft with Coating",
+        "ITC Duplex Board",
+        "XL",
+        "Saphire",
+        "Viva Liner & BILT Art Board",
       ],
-      gsm: ["180 GSM", "200 GSM", "220 GSM"],
-      sizes: ["Custom sizes available"],
-      handles: ["Cotton Rope", "Ribbon", "Flat Paper Handle"],
+      gsm: ["180 / 220 / 250 / 300 / 320 GSM"],
+      sizes: standardDimensions,
+      handles: ["Nylon / Cotton / Vesco Twisted / Ribbon Handles"],
       printing: ["CMYK Offset", "Pantone Matching", "Screen Printing"],
       finishes: [
-        "Matte Varnish",
-        "Aqueous Coating",
-        "Subtle Foil Stamping",
+        "Aquas Coating",
+        "Glossy / Matte / Velvet Bio-Degradable Lamination",
+        "Drip-off",
+        "Hot Stamp Foil Print",
+        "Emboss",
+        "De-boss & Spot UV",
       ],
     },
     applications: [
@@ -170,6 +181,7 @@ export const products: Product[] = [
       "Internal board reinforcement",
       "Eyelet choice",
       "Handle length",
+      "Aquas coating & specialty finishes",
     ],
   },
   {
@@ -188,7 +200,7 @@ export const products: Product[] = [
     specifications: {
       paperTypes: ["Premium Art Paper", "Textured Paper", "Specialty Papers"],
       gsm: ["250 GSM", "300 GSM", "350 GSM"],
-      sizes: ["Custom sizes available"],
+      sizes: standardDimensions,
       handles: [
         "Satin Ribbon",
         "Grosgrain Ribbon",
@@ -201,12 +213,14 @@ export const products: Product[] = [
         "Multi-layer Foiling",
       ],
       finishes: [
+        "Aquas Coating",
+        "Glossy / Matte / Velvet Bio-Degradable Lamination",
+        "Drip-off",
+        "Hot Stamp Foil Print",
+        "Emboss",
+        "De-boss & Spot UV",
         "Soft Touch Matte",
-        "Spot UV",
         "Multi-color Foil",
-        "Deep Embossing",
-        "Debossing",
-        "Textured Finish",
       ],
     },
     applications: [
@@ -244,7 +258,7 @@ export const products: Product[] = [
         "Composite Paper",
       ],
       gsm: ["200 GSM", "250 GSM", "300 GSM", "400 GSM"],
-      sizes: ["Custom shapes & dimensions"],
+      sizes: standardDimensions,
       handles: [
         "Integrated Die-cut",
         "Leather Cord",

@@ -18,21 +18,22 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
+    const userSelected = sessionStorage.getItem("pw-theme-user-choice");
     const stored = localStorage.getItem("pw-theme") as Theme | null;
-    if (stored) {
+    if (userSelected && stored) {
       setThemeState(stored);
       document.documentElement.setAttribute("data-theme", stored);
     } else {
-      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initial = systemDark ? "dark" : "light";
-      setThemeState(initial);
-      document.documentElement.setAttribute("data-theme", initial);
+      // Default to light theme on landing on any desktop
+      setThemeState("light");
+      document.documentElement.setAttribute("data-theme", "light");
     }
   }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
     try {
+      sessionStorage.setItem("pw-theme-user-choice", "true");
       localStorage.setItem("pw-theme", newTheme);
     } catch {}
     document.documentElement.classList.add("theme-transition");

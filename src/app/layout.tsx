@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 import GlobalBackground from "@/components/layout/GlobalBackground";
 
@@ -56,8 +57,8 @@ export const metadata: Metadata = {
   },
 };
 
-/* Inline script to apply saved theme before first paint – prevents flash */
-const themeScript = `(function(){try{var t=localStorage.getItem('pw-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()`;
+/* Inline script to apply saved theme before first paint – defaults to light theme on landing on any desktop */
+const themeScript = `(function(){try{var userSelected=sessionStorage.getItem('pw-theme-user-choice');var t=userSelected?localStorage.getItem('pw-theme'):'light';if(!t){t='light'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()`;
 
 export default function RootLayout({
   children,
@@ -70,10 +71,12 @@ export default function RootLayout({
       className={`${inter.variable} ${outfit.variable} ${trench.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="min-h-full flex flex-col">
+        <Script
+          id="pw-theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+        />
         <GlobalBackground />
         {children}
       </body>

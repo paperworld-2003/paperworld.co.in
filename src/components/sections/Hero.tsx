@@ -91,6 +91,18 @@ export default function Hero() {
     return () => clearInterval(timer);
   }, [nextSlide, isPaused]);
 
+  // Preload subsequent slides in background after initial page paint so slide transitions are instant
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const preloadTimer = setTimeout(() => {
+      slides.slice(1).forEach((slide) => {
+        const img = new window.Image();
+        img.src = slide.image;
+      });
+    }, 1200);
+    return () => clearTimeout(preloadTimer);
+  }, []);
+
   const activeSlide = slides[current];
   const BadgeIcon = activeSlide.badgeIcon;
 
@@ -98,10 +110,9 @@ export default function Hero() {
     <div id="hero" className="relative w-full">
       {/* ──────────────────────────────────────────────────────────────────────────
           MOBILE HERO (< md screens):
-          - Seamless Home Page Background: Ambient slide glow blending with page theme.
+          - Seamless Home Page Background: Ultra-fast CSS ambient glow adapting to theme.
           - Slideshow Image right at the TOP (below header).
-          - Rich content BELOW: Badge, Headline, Description, Features, Buttons & Trust metrics.
-          - Strictly BLACK typography on bright frosted glass containers.
+          - Rich content BELOW: Container bg & text dynamically change with dark/light mode.
           ────────────────────────────────────────────────────────────────────────── */}
       <section
         aria-label="Mobile Hero Section"
@@ -109,32 +120,10 @@ export default function Hero() {
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Mobile Ambient Background: Soft blurred reflection of active slide that blends seamlessly with home page theme */}
+        {/* Mobile Ambient Background: Hardware-accelerated theme wash (zero extra image network requests) */}
         <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <AnimatePresence mode="sync">
-            {slides.map((slide, idx) => {
-              if (idx !== current) return null;
-              return (
-                <motion.div
-                  key={`m-ambient-${slide.id}`}
-                  className="absolute inset-0 w-full h-full"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8, ease: "easeInOut" }}
-                >
-                  <Image
-                    src={slide.image}
-                    alt="Ambient slide background"
-                    fill
-                    className="object-cover blur-3xl scale-125 opacity-35 dark:opacity-25"
-                  />
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-          {/* Subtle frosted wash to ensure seamless theme background */}
-          <div className="absolute inset-0 bg-background/85 backdrop-blur-xl" />
+          <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-[110vw] h-[55vh] bg-gradient-to-b from-primary/18 via-primary/5 to-transparent rounded-full blur-3xl opacity-75 dark:opacity-40 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-background/85 backdrop-blur-xl transition-colors duration-300" />
         </div>
 
         <div className="max-w-md mx-auto w-full flex-1 flex flex-col gap-2 sm:gap-3">
@@ -163,6 +152,7 @@ export default function Hero() {
                         alt={`Paper World Packaging - ${slide.titleLine1}`}
                         fill
                         priority={idx === 0}
+                        fetchPriority={idx === 0 ? "high" : "auto"}
                         className="object-cover object-center w-full h-full brightness-[1.05] contrast-[1.10]"
                         sizes="(max-width: 768px) 100vw, 450px"
                         quality={82}
@@ -213,8 +203,8 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* 2. CONTENTS BELOW: Expanded Glassmorphic Container */}
-          <div className="hero-glass-container w-full flex-1 p-3 sm:p-5 rounded-2xl flex flex-col justify-between text-left shadow-xl">
+          {/* 2. CONTENTS BELOW: Theme-Adaptive Container (Light in light mode, Dark in dark mode) */}
+          <div className="mobile-hero-container w-full flex-1 p-3 sm:p-5 rounded-2xl flex flex-col justify-between text-left shadow-xl transition-all duration-300">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`mobile-text-${current}`}
@@ -225,31 +215,25 @@ export default function Hero() {
                 className="flex flex-col gap-1.5 sm:gap-2"
               >
                 {/* Badge */}
-                <div className="hero-glass-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full w-max shadow-sm">
+                <div className="mobile-hero-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full w-max shadow-sm">
                   <BadgeIcon className="w-3.5 h-3.5 text-primary shrink-0" />
-                  <span
-                    className="hero-text-contrast-sm text-[10px] font-extrabold tracking-wider uppercase text-black"
-                    style={{ color: "#000000" }}
-                  >
+                  <span className="text-[10px] font-extrabold tracking-wider uppercase text-neutral-900 dark:text-neutral-100 transition-colors duration-200">
                     {activeSlide.tagline}
                   </span>
                 </div>
 
-                {/* Headline - strictly black in both light and dark mode */}
-                <h1
-                  className="hero-headline hero-text-contrast font-heading font-black uppercase tracking-normal text-black text-lg sm:text-2xl leading-snug"
-                  style={{ color: "#000000" }}
-                >
-                  <span className="block text-black" style={{ color: "#000000" }}>
+                {/* Headline - dynamically adapts to light/dark mode */}
+                <h1 className="hero-headline font-heading font-black uppercase tracking-normal text-neutral-950 dark:text-white text-lg sm:text-2xl leading-snug transition-colors duration-200">
+                  <span className="block text-neutral-950 dark:text-white transition-colors duration-200">
                     {activeSlide.titleLine1}
                   </span>
-                  <span className="block mt-0.5 text-black" style={{ color: "#000000" }}>
+                  <span className="block mt-0.5 text-neutral-950 dark:text-white transition-colors duration-200">
                     {activeSlide.titleLine2}
                   </span>
                 </h1>
 
                 {/* Rich Supporting Description */}
-                <p className="text-xs sm:text-sm text-neutral-800 font-medium leading-relaxed" style={{ color: "#1c1917" }}>
+                <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 font-medium leading-relaxed transition-colors duration-200">
                   {activeSlide.description}
                 </p>
 
@@ -258,21 +242,19 @@ export default function Hero() {
                   {activeSlide.features.map((feat, fIdx) => (
                     <span
                       key={`feat-${fIdx}`}
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/70 dark:bg-white/80 text-black border border-black/10 shadow-sm"
-                      style={{ color: "#000000" }}
+                      className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 border border-black/10 dark:border-white/15 shadow-sm transition-colors duration-200"
                     >
                       {feat}
                     </span>
                   ))}
                 </div>
 
-                {/* Key Specifications & Quality Highlights - Fills empty space with high-value USPs */}
-                <div className="flex flex-col gap-1 pt-1 border-t border-black/10">
+                {/* Key Specifications & Quality Highlights */}
+                <div className="flex flex-col gap-1 pt-1 border-t border-black/10 dark:border-white/10 transition-colors duration-200">
                   {activeSlide.highlights.map((h, hIdx) => (
                     <div
                       key={`hl-${hIdx}`}
-                      className="flex items-center gap-2 text-[10.5px] font-semibold text-neutral-800"
-                      style={{ color: "#1c1917" }}
+                      className="flex items-center gap-2 text-[10.5px] font-semibold text-neutral-700 dark:text-neutral-300 transition-colors duration-200"
                     >
                       <CheckCircle2 className="w-3 h-3 text-primary shrink-0" />
                       <span className="line-clamp-1">{h}</span>
@@ -297,30 +279,27 @@ export default function Hero() {
 
                 <a
                   href="#products"
-                  className="hero-glass-pill flex-1 py-2.5 sm:py-3 rounded-xl text-xs font-bold tracking-wider uppercase text-center flex items-center justify-center transition-all active:scale-95 hover:bg-white/40"
+                  className="mobile-hero-pill flex-1 py-2.5 sm:py-3 rounded-xl text-xs font-bold tracking-wider uppercase text-center flex items-center justify-center transition-all active:scale-95 hover:bg-black/5 dark:hover:bg-white/10"
                 >
-                  <span
-                    className="hero-text-contrast-sm text-black font-extrabold"
-                    style={{ color: "#000000" }}
-                  >
+                  <span className="font-extrabold text-neutral-900 dark:text-white transition-colors duration-200">
                     View Products
                   </span>
                 </a>
               </div>
 
-              {/* Micro Trust Stats Strip to utilize vertical mobile space */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-black/10 text-center">
+              {/* Micro Trust Stats Strip */}
+              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-black/10 dark:border-white/10 text-center transition-colors duration-200">
                 <div>
                   <p className="text-xs font-black text-primary">50M+</p>
-                  <p className="text-[9px] font-semibold text-neutral-700" style={{ color: "#292524" }}>Bags Made</p>
+                  <p className="text-[9px] font-semibold text-neutral-600 dark:text-neutral-400 transition-colors duration-200">Bags Made</p>
                 </div>
                 <div>
                   <p className="text-xs font-black text-primary">100%</p>
-                  <p className="text-[9px] font-semibold text-neutral-700" style={{ color: "#292524" }}>Eco Friendly</p>
+                  <p className="text-[9px] font-semibold text-neutral-600 dark:text-neutral-400 transition-colors duration-200">Eco Friendly</p>
                 </div>
                 <div>
                   <p className="text-xs font-black text-primary">500+</p>
-                  <p className="text-[9px] font-semibold text-neutral-700" style={{ color: "#292524" }}>B2B Clients</p>
+                  <p className="text-[9px] font-semibold text-neutral-600 dark:text-neutral-400 transition-colors duration-200">B2B Clients</p>
                 </div>
               </div>
             </div>
@@ -366,6 +345,7 @@ export default function Hero() {
                     alt={`Paper World Packaging - ${slide.titleLine1}`}
                     fill
                     priority={idx === 0}
+                    fetchPriority={idx === 0 ? "high" : "auto"}
                     className="object-cover object-center w-full h-full brightness-[1.08] contrast-[1.12] saturate-[1.10]"
                     sizes="100vw"
                     quality={82}

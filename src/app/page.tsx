@@ -2,10 +2,10 @@ import dynamic from "next/dynamic";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 // Dynamically load below-the-fold sections for instant FCP/LCP and 100% Lighthouse Performance
+const About = dynamic(() => import("@/components/sections/About"));
 const WhyPaperBags = dynamic(() => import("@/components/sections/WhyPaperBags"));
 const Products = dynamic(() => import("@/components/sections/Products"));
 const Customization = dynamic(() => import("@/components/sections/Customization"));

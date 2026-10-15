@@ -187,7 +187,7 @@ export default function Footer() {
                 <img src="/Vyome%20Logo.png" alt="Vyome Logo" className="w-full h-full object-contain" />
               </span>
               <span className="text-foreground group-hover:text-primary transition-colors duration-300">
-                Designed by Vyome
+                Designed & Developed by Vyome
               </span>
             </a>
             <button

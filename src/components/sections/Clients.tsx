@@ -11,7 +11,7 @@ const row1 = [
   "Speedo",
   "Fila",
   "Identify",
-  "Aukaera",
+  "Aukera",
   "Raj Diamonds",
   "Bhima Jewellers",
   "William Penn",
@@ -19,7 +19,7 @@ const row1 = [
   "Bose",
   "Imagine",
   "Harsha",
-  "San Cha Tea Boutique",
+  "Sancha Tea Boutique",
   "Hard Rock Cafe",
   "JW Marriott",
 ];
@@ -29,18 +29,18 @@ const row2 = [
   "Smoor",
   "Communiti",
   "The Oberoi",
-  "Hatti Kappi",
+  "Hatti Kaapi",
   "Amintiri",
   "Happy Belly",
-  "Lamara Pastries",
+  "Lamara Patisserie",
   "Fossil",
   "Q&Q",
   "Toys RVS",
-  "Lego",
+  "LEGO",
   "KLM",
-  "Deepam",
-  "PN Rao",
-  "Velvet Vsheen",
+  "Deepam Silks",
+  "P N Rao",
+  "Velvet Sheen",
   "Prestige - The Man's Store",
   "ISKCON",
 ];
@@ -70,7 +70,10 @@ function MarqueeRow({ brands, direction = "left" }: MarqueeRowProps) {
         <div className="flex shrink-0 items-center gap-10 md:gap-14 pr-10 md:pr-14">
           {brands.map((brand, index) => (
             <div key={`track1-${brand}-${index}`} className="flex items-center gap-10 md:gap-14">
-              <span className="text-lg md:text-xl font-heading font-semibold tracking-wide text-foreground/35 hover:text-primary transition-colors duration-300 select-none cursor-default">
+              <span
+                suppressHydrationWarning
+                className="text-lg md:text-xl font-heading font-semibold tracking-wide text-foreground/35 hover:text-primary transition-colors duration-300 select-none cursor-default"
+              >
                 {brand}
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-foreground/25 shrink-0 select-none" />
@@ -82,7 +85,10 @@ function MarqueeRow({ brands, direction = "left" }: MarqueeRowProps) {
         <div className="flex shrink-0 items-center gap-10 md:gap-14 pr-10 md:pr-14" aria-hidden="true">
           {brands.map((brand, index) => (
             <div key={`track2-${brand}-${index}`} className="flex items-center gap-10 md:gap-14">
-              <span className="text-lg md:text-xl font-heading font-semibold tracking-wide text-foreground/35 hover:text-primary transition-colors duration-300 select-none cursor-default">
+              <span
+                suppressHydrationWarning
+                className="text-lg md:text-xl font-heading font-semibold tracking-wide text-foreground/35 hover:text-primary transition-colors duration-300 select-none cursor-default"
+              >
                 {brand}
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-foreground/25 shrink-0 select-none" />

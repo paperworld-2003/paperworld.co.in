@@ -54,8 +54,8 @@ const customizationOptions = [
     icon: Layers,
     title: "Paper Quality & Feel",
     points: [
-      "Virgin Brown Kraft & White Bleached Kraft",
-      "Art Paper & Specialty Textured Stocks",
+      "Virgin Brown Kraft, Bleached & White Kraft",
+      "Duplex Board, XL, Saphire, Art Paper & Specialty Textured Boards",
       "Wide GSM options from lightweight to ultra-rigid",
       "100% FSC-certified & biodegradable fibers",
     ],
@@ -76,8 +76,8 @@ const customizationOptions = [
     points: [
       "Gold, Copper & Silver Hot-Foil Stamping",
       "3D Embossing & Subtle Debossing",
-      "Spot UV, Gloss & Matte Silk Lamination",
-      "Precision multi-color offset & flexo printing",
+      "Spot UV, Drip-off, Gloss, Matte & Velvet Lamination",
+      "Precision 1, 2 & Multi color offset, CMYK & Pantone",
     ],
   },
   {
@@ -124,13 +124,14 @@ const timeline = [
   { year: "2010", title: "Factory Expansion", desc: "Upgraded facility footprint to scale up production and warehousing capabilities." },
   { year: "2015", title: "Advanced Printing", desc: "Installed state-of-the-art multi-color offset and hot-foil press lines." },
   { year: "2018", title: "Automation Upgrade", desc: "Integrated fully automated folding, bottom-pasting, and handle-fitting lines." },
+  { year: "2022", title: "Manufacturing Units Added", desc: "Manufacturing units added to significantly expand production capacity and facility infrastructure." },
 ];
 
 const values = [
   {
     icon: Target,
     title: "Our Mission",
-    description: "To deliver premium, eco-friendly paper packaging solutions that help brands make a lasting impression while minimizing environmental footprint.",
+    description: "To deliver premium, eco-friendly Paper Bag solutions that help brands make a lasting impression while minimizing environmental footprint.",
   },
   {
     icon: Eye,
@@ -140,12 +141,12 @@ const values = [
   {
     icon: Heart,
     title: "Craftsmanship",
-    description: "Every fold, paste, and stitch is a result of 23 years of manufacturing expertise, meticulous care, and strict eye for details.",
+    description: "Every fold, paste, and Gumming is a result of 23 years of manufacturing expertise, meticulous care and strict eye for details.",
   },
   {
     icon: Award,
     title: "Quality Promise",
-    description: "We use only the finest raw stocks and food-grade organic adhesives to build structures that carry load safely and look premium.",
+    description: "We use only Prime Raw-Materials, finest raw stocks and food-grade organic adhesives to build structures that carry load safely and look premium.",
   },
 ];
 
@@ -513,7 +514,7 @@ export default function About() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────────────────
-          7. MANUFACTURING JOURNEY TIMELINE (2003 - 2018)
+          7. MANUFACTURING JOURNEY TIMELINE (2003 - 2022)
           ────────────────────────────────────────────────────────────────────────── */}
       <section className="section-padding overflow-hidden">
         <div className="container-premium flex flex-col items-center">
@@ -664,7 +665,7 @@ export default function About() {
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 border-2 border-border text-foreground hover:bg-muted rounded-xl text-xs sm:text-sm font-bold tracking-wider uppercase transition-all duration-300"
                 >
-                  WhatsApp Key Manager
+                  Contact Through WhatsApp
                 </a>
               </div>
             </div>

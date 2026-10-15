@@ -19,6 +19,47 @@ export default function Contact() {
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [lastSubmitted, setLastSubmitted] = useState<typeof formState | null>(null);
+
+  const generateWhatsAppMessage = (data = formState) => {
+    const lines = [
+      `*PAPER WORLD — CLIENT QUOTATION INQUIRY*`,
+      `────────────────────────────`,
+      ``,
+      `*CLIENT INFORMATION*`,
+      `• Name: ${data.name.trim() || "Not specified"}`,
+      data.company.trim() ? `• Organization: ${data.company.trim()}` : null,
+      `• Contact: ${data.phone.trim() || "Not specified"}`,
+      data.email.trim() ? `• Email: ${data.email.trim()}` : null,
+      ``,
+      `*ORDER SPECIFICATIONS*`,
+      data.industry ? `• Industry Sector: ${data.industry}` : null,
+      data.product ? `• Packaging Type: ${data.product}` : null,
+      data.quantity ? `• Estimated Volume: ${data.quantity} units` : null,
+      ``,
+      `*REQUIREMENTS & DETAILS*`,
+      data.message.trim() || "Interested in a manufacturing quote for custom paper bags.",
+      ``,
+      `────────────────────────────`,
+      `_Submitted via paperworld.co.in_`,
+    ].filter((line) => line !== null);
+
+    return lines.join("\n");
+  };
+
+  const handleSendWhatsApp = (e?: React.MouseEvent, data = formState) => {
+    if (e) e.preventDefault();
+
+    if (!data.name.trim() || !data.phone.trim()) {
+      setStatus("error");
+      setErrorMessage("Please enter at least your Name and Phone Number to send via WhatsApp.");
+      return;
+    }
+
+    const message = generateWhatsAppMessage(data);
+    const waUrl = `https://wa.me/919886699009?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, "_blank", "noopener,noreferrer");
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -52,29 +93,17 @@ export default function Contact() {
       return;
     }
 
+    setLastSubmitted({ ...formState });
+
     try {
-      // Using Web3Forms public API for backend-free email receipt
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          access_key: "YOUR_ACCESS_KEY_HERE", // Replace with actual Web3Forms access key
-          subject: `Paper World Quote Request from ${formState.name}`,
-          from_name: "Paper World Website",
-          ...formState,
-        }),
+        body: JSON.stringify(formState),
       });
-
-      // Special check to notify user if API key is not connected
-      if ("YOUR_ACCESS_KEY_HERE" === "YOUR_ACCESS_KEY_HERE") {
-        await new Promise((resolve) => setTimeout(resolve, 800)); // simulate network delay
-        setStatus("error");
-        setErrorMessage("Backend API is not connected. Please provide a valid Web3Forms Access Key to receive emails.");
-        return;
-      }
 
       const result = await response.json();
 
@@ -90,15 +119,14 @@ export default function Contact() {
           quantity: "",
           message: "",
         });
-        // Reset success message after 5 seconds
-        setTimeout(() => setStatus("idle"), 5000);
+        setTimeout(() => setStatus("idle"), 6000);
       } else {
         setStatus("error");
-        setErrorMessage(result.message || "Something went wrong. Please try again.");
+        setErrorMessage(result.message || "Failed to submit quote request. Please try again or use WhatsApp.");
       }
     } catch {
       setStatus("error");
-      setErrorMessage("Failed to send quote request. Please check your internet connection.");
+      setErrorMessage("Failed to send quote request. Please check your internet connection or use WhatsApp.");
     }
   };
 
@@ -350,21 +378,20 @@ export default function Contact() {
                       <button
                         type="submit"
                         disabled={status === "loading"}
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 bg-primary text-white rounded-xl text-sm font-semibold transition-all duration-300 hover:bg-primary-dark hover:shadow-[0_4px_20px_rgba(217,112,40,0.25)] active:scale-[0.98] disabled:opacity-50"
+                        className="w-full sm:flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-white rounded-xl text-sm font-semibold transition-all duration-300 hover:bg-primary-dark hover:shadow-[0_4px_20px_rgba(217,112,40,0.25)] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
                       >
                         {status === "loading" ? "Submitting Quote..." : "Submit Quote Request"}
                         <Send className="w-4 h-4" />
                       </button>
 
-                      <a
-                        href="https://wa.me/919886699009"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 border border-emerald-500/30 text-emerald-600 dark:text-emerald-500 rounded-xl text-sm font-semibold transition-all duration-300 hover:bg-emerald-500/5 hover:border-emerald-500/50"
+                      <button
+                        type="button"
+                        onClick={(e) => handleSendWhatsApp(e)}
+                        className="w-full sm:flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-xl text-sm font-semibold transition-all duration-300 shadow-[0_4px_16px_rgba(37,211,102,0.25)] hover:shadow-[0_6px_22px_rgba(37,211,102,0.35)] active:scale-[0.98] cursor-pointer"
                       >
-                        WhatsApp Sales
                         <MessageCircle className="w-4 h-4 fill-current" />
-                      </a>
+                        Contact Through WhatsApp
+                      </button>
                     </div>
                     
                     {/* Small Status Message Below Action Buttons */}
@@ -375,10 +402,20 @@ export default function Contact() {
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
-                          className="mt-2 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-500 flex items-center gap-3 text-sm font-medium"
+                          className="mt-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 flex flex-col gap-2 text-sm font-medium"
                         >
-                          <CheckCircle className="w-5 h-5 shrink-0" />
-                          <span>Quote Request Received! We will contact you within 24 hours.</span>
+                          <div className="flex items-center gap-2.5">
+                            <CheckCircle className="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-500" />
+                            <span>Quote Request Received! We will contact you within 24 hours.</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleSendWhatsApp(undefined, lastSubmitted || formState)}
+                            className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline cursor-pointer pt-0.5"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5 fill-current" />
+                            Click here to also forward this quote to WhatsApp for immediate response →
+                          </button>
                         </motion.div>
                       )}
                       
@@ -388,7 +425,7 @@ export default function Contact() {
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
-                          className="mt-2 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center gap-3 text-sm font-medium"
+                          className="mt-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center gap-2.5 text-sm font-medium"
                         >
                           <AlertTriangle className="w-5 h-5 shrink-0" />
                           <span>{errorMessage}</span>

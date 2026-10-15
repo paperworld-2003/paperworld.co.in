@@ -65,7 +65,7 @@ function ProductGallery({ product }: { product: Product }) {
 }
 
 /* ── Spec Row Component ── */
-function SpecRow({ label, value }: { label: string; value: string }) {
+function SpecRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1 py-4 px-5 border-b border-border/60 last:border-b-0">
       <span className="text-[11px] uppercase font-semibold tracking-wider text-muted-foreground">
@@ -156,7 +156,15 @@ export default function ProductDetailContent({
                 />
                 <SpecRow
                   label="Dimensions"
-                  value={product.specifications.sizes.join(", ")}
+                  value={
+                    <div className="flex flex-col gap-1 pt-0.5">
+                      {product.specifications.sizes.map((size, idx) => (
+                        <span key={idx} className="block leading-relaxed">
+                          {size}
+                        </span>
+                      ))}
+                    </div>
+                  }
                 />
                 <SpecRow
                   label="Handle Options"
