@@ -37,7 +37,6 @@ export const products: Product[] = [
     gallery: [
       "/products/ready-to-deliver/1.png",
       "/products/ready-to-deliver/2.png",
-      "/products/ready-to-deliver/3.png",
     ],
     specifications: {
       paperTypes: ["Brown Kraft", "White Kraft"],
@@ -61,11 +60,13 @@ export const products: Product[] = [
       "Classic natural kraft paper bags with a rustic, eco-friendly aesthetic.",
     description:
       "Our Brown Kraft Paper Bags embody the essence of sustainable packaging. Made from premium virgin kraft paper, these bags offer exceptional strength and durability while maintaining an organic, natural aesthetic. Perfect for brands that value authenticity and environmental consciousness.",
-    image: "/products/brown-kraft/1.png",
+    image: "/products/brown-kraft/3.png",
     gallery: [
-      "/products/brown-kraft/1.png",
-      "/products/brown-kraft/2.png",
       "/products/brown-kraft/3.png",
+      "/products/brown-kraft/4.png",
+      "/products/brown-kraft/5.png",
+      "/products/brown-kraft/6.png",
+      "/products/brown-kraft/7.png",
     ],
     specifications: {
       paperTypes: ["Virgin Brown Kraft", "Recycled Brown Kraft"],
@@ -97,11 +98,13 @@ export const products: Product[] = [
       "Pristine white kraft bags delivering a clean, premium presentation.",
     description:
       "Bleached Kraft Paper Bags provide a pristine white canvas for your brand. The clean surface ensures vibrant print quality, making your logo and artwork stand out beautifully. These bags combine the strength of kraft paper with the elegance of a refined white finish.",
-    image: "/products/bleached-kraft/1.png",
+    image: "/products/bleached-kraft/8.png",
     gallery: [
-      "/products/bleached-kraft/1.png",
-      "/products/bleached-kraft/2.png",
-      "/products/bleached-kraft/3.png",
+      "/products/bleached-kraft/8.png",
+      "/products/bleached-kraft/9.png",
+      "/products/bleached-kraft/10.png",
+      "/products/bleached-kraft/11.png",
+      "/products/bleached-kraft/12.png",
     ],
     specifications: {
       paperTypes: ["Bleached White Kraft"],
@@ -144,11 +147,13 @@ export const products: Product[] = [
       "Balanced premium paper bags combining refined styling with cost-efficiency.",
     description:
       "Our Mid Premium Paper Bags bridge the gap between everyday packaging and high-end luxury. Made from durable medium-weight boards or heavy-duty kraft paper, these bags feature excellent surface finishes and comfortable cotton rope or ribbon handles. Ideal for retailers seeking a premium aesthetic at an optimized price point.",
-    image: "/products/mid-premium/1.png",
+    image: "/products/mid-premium/13.png",
     gallery: [
-      "/products/mid-premium/1.png",
-      "/products/mid-premium/2.png",
-      "/products/mid-premium/3.png",
+      "/products/mid-premium/13.png",
+      "/products/mid-premium/14.png",
+      "/products/mid-premium/17.png",
+      "/products/mid-premium/18.png",
+      "/products/mid-premium/19.png",
     ],
     specifications: {
       paperTypes: [
@@ -191,11 +196,15 @@ export const products: Product[] = [
       "Ultra-luxury paper bags with exquisite finishes for high-end brands.",
     description:
       "Our Premium Paper Bags are designed for brands that accept nothing but the best. Featuring superior paper quality, impeccable printing, and luxurious finishing options, these bags create an unforgettable unboxing experience. Every detail is crafted to communicate exclusivity and sophistication.",
-    image: "/products/premium/1.png",
+    image: "/products/premium/15.png",
     gallery: [
-      "/products/premium/1.png",
-      "/products/premium/2.png",
-      "/products/premium/3.png",
+      "/products/premium/15.png",
+      "/products/premium/16.png",
+      "/products/premium/20.png",
+      "/products/premium/21.png",
+      "/products/premium/23.png",
+      "/products/premium/24.png",
+      "/products/premium/26.png",
     ],
     specifications: {
       paperTypes: ["Premium Art Paper", "Textured Paper", "Specialty Papers"],
@@ -245,11 +254,12 @@ export const products: Product[] = [
       "Bespoke, custom-tailored packaging solutions for unique and specialized products.",
     description:
       "Niche Paper Bags are developed for products requiring custom shapes, dimensions, structures, or unique opening mechanisms. Whether it is wine bottle packaging, triangular gift box bags, or custom die-cut windows, we design and manufacture unique shapes tailored to your product.",
-    image: "/products/niche/1.png",
+    image: "/products/niche/22.png",
     gallery: [
-      "/products/niche/1.png",
-      "/products/niche/2.png",
-      "/products/niche/3.png",
+      "/products/niche/22.png",
+      "/products/niche/25.png",
+      "/products/niche/27.png",
+      "/products/niche/28.png",
     ],
     specifications: {
       paperTypes: [

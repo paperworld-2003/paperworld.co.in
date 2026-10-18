@@ -14,7 +14,12 @@ export async function getGalleryImages(slug: string): Promise<string[]> {
     // Filter out only image files and sort them alphabetically
     const images = files
       .filter((file) => /\.(png|jpe?g|webp|gif|svg)$/i.test(file))
-      .sort() // Sort alphabetically to maintain a consistent order
+      .sort((a, b) => {
+        const numA = parseInt(a.replace(/\D/g, ""), 10);
+        const numB = parseInt(b.replace(/\D/g, ""), 10);
+        if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+        return a.localeCompare(b);
+      })
       .map((file) => `/products/${slug}/${file}`);
       
     return images;

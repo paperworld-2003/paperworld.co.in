@@ -95,19 +95,94 @@ export default function Contact() {
 
     setLastSubmitted({ ...formState });
 
+    const accessKey =
+      process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+      "733724f6-ba0d-4a49-bf90-122c54e145ae";
+
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(formState),
-      });
+      let isSuccess = false;
+      let responseMessage = "";
 
-      const result = await response.json();
+      // 1. Prepare FormData (standard format recommended by Web3Forms for client-side forms)
+      const formData = new FormData();
+      formData.append("access_key", accessKey);
+      formData.append(
+        "subject",
+        `[NEW RFQ QUOTE] ${formState.name}${formState.company ? ` — ${formState.company}` : ""}`
+      );
+      formData.append("from_name", "Paper World RFQ Portal");
+      formData.append("replyto", formState.email);
+      formData.append("Client Name", formState.name);
+      formData.append("Company / Organization", formState.company || "Not provided");
+      formData.append("Contact Number", formState.phone);
+      formData.append("Email Address", formState.email);
+      formData.append("Industry Sector", formState.industry || "General Retail / Commercial");
+      formData.append("Packaging Category", formState.product || "Custom Specification");
+      formData.append("Estimated Order Quantity", `${formState.quantity} Units`);
+      formData.append("Project Scope & Custom Specifications", formState.message);
+      formData.append("Submitted Via", "Paper World Official Website (https://paperworld.co.in)");
+      formData.append(
+        "Submission Time",
+        new Date().toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          dateStyle: "full",
+          timeStyle: "medium",
+        })
+      );
 
-      if (result.success) {
+      // Attempt client-side submission to Web3Forms
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData,
+        });
+
+        const contentType = response.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const result = await response.json();
+          if (result.success) {
+            isSuccess = true;
+            responseMessage = result.message || "Quote request submitted successfully!";
+          } else {
+            responseMessage = result.message || "";
+          }
+        } else if (response.ok) {
+          isSuccess = true;
+        }
+      } catch (clientErr) {
+        console.warn("Client-side direct submission failed, attempting local API fallback:", clientErr);
+      }
+
+      // 2. If client-side submission didn't succeed, fallback to /api/contact
+      if (!isSuccess) {
+        try {
+          const apiRes = await fetch("/api/contact", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(formState),
+          });
+
+          const apiContentType = apiRes.headers.get("content-type") || "";
+          if (apiContentType.includes("application/json")) {
+            const apiResult = await apiRes.json();
+            if (apiResult.success) {
+              isSuccess = true;
+              responseMessage = apiResult.message || "Quote request received!";
+            } else {
+              responseMessage = apiResult.message || responseMessage;
+            }
+          } else if (apiRes.ok) {
+            isSuccess = true;
+          }
+        } catch (apiErr) {
+          console.warn("API fallback failed:", apiErr);
+        }
+      }
+
+      if (isSuccess) {
         setStatus("success");
         setFormState({
           name: "",
@@ -122,11 +197,16 @@ export default function Contact() {
         setTimeout(() => setStatus("idle"), 6000);
       } else {
         setStatus("error");
-        setErrorMessage(result.message || "Failed to submit quote request. Please try again or use WhatsApp.");
+        setErrorMessage(
+          responseMessage ||
+            "Unable to submit via email service right now. Please connect directly via WhatsApp for an instant response."
+        );
       }
     } catch {
       setStatus("error");
-      setErrorMessage("Failed to send quote request. Please check your internet connection or use WhatsApp.");
+      setErrorMessage(
+        "Failed to send quote request. Please use WhatsApp for an immediate quotation."
+      );
     }
   };
 
