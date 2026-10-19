@@ -1,8 +1,25 @@
 import { NextResponse } from "next/server";
+import {
+  buildWeb3FormsPayload,
+  generateQuoteEmailHtml,
+  generateExecutiveSummary,
+  QuoteFormData,
+} from "@/lib/emailTemplate";
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
+    const data: QuoteFormData = await request.json();
+
+    const timestamp = new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      dateStyle: "full",
+      timeStyle: "medium",
+    });
+
+    const formDataWithTime: QuoteFormData = {
+      ...data,
+      timestamp,
+    };
 
     // Supports WEB3FORMS_ACCESS_KEY (Vercel env), NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY, with fallback
     const accessKey =
@@ -10,39 +27,82 @@ export async function POST(request: Request) {
       process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
       "733724f6-ba0d-4a49-bf90-122c54e145ae";
 
-    if (!accessKey) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Web3Forms access key is missing. Please configure WEB3FORMS_ACCESS_KEY in Vercel.",
-        },
-        { status: 400 }
-      );
+    let emailDeliveredDirectly = false;
+
+    // 1. Check for Direct SMTP / Nodemailer delivery if configured in Vercel / .env
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
+    const smtpPort = Number(process.env.SMTP_PORT || 465);
+    const recipientEmail =
+      process.env.SMTP_TO || "reachus@paperworld.co.in, paperworldbglr@gmail.com";
+
+    if (smtpUser && smtpPass) {
+      try {
+        const nodemailer = await import("nodemailer");
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: smtpPort,
+          secure: smtpPort === 465,
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+        });
+
+        const htmlEmail = generateQuoteEmailHtml(formDataWithTime);
+        const plainText = generateExecutiveSummary(formDataWithTime);
+
+        await transporter.sendMail({
+          from: `"Paper World Quote Portal" <${smtpUser}>`,
+          to: recipientEmail,
+          replyTo: data.email,
+          subject: `🟧 [PAPER WORLD RFQ] ${data.name || "Inquiry"} — ${data.product || "Paper Bags"} (${data.quantity || "Quote"})`,
+          text: plainText,
+          html: htmlEmail,
+        });
+
+        emailDeliveredDirectly = true;
+        console.info("Direct luxury HTML quote email sent via SMTP successfully.");
+      } catch (smtpErr) {
+        console.warn("Direct SMTP delivery failed, falling back to Web3Forms:", smtpErr);
+      }
     }
 
-    const payload = {
-      access_key: accessKey,
-      subject: `[NEW RFQ QUOTE] ${data.name || "Inquiry"}${data.company ? ` — ${data.company}` : ""}`,
-      from_name: "Paper World RFQ Portal",
-      replyto: data.email || undefined,
-      "Client Name": data.name || "Not provided",
-      "Company / Organization": data.company || "Not provided",
-      "Contact Number": data.phone || "Not provided",
-      "Email Address": data.email || "Not provided",
-      "Industry Sector": data.industry || "General Retail / Commercial",
-      "Packaging Category": data.product || "Custom Specification",
-      "Estimated Order Quantity": data.quantity ? `${data.quantity} Units` : "Not specified",
-      "Project Scope & Custom Specifications": data.message || "Custom paper bag quotation requested.",
-      "Submitted Via": "Paper World Official Website (https://paperworld.co.in)",
-      "Submission Time": new Date().toLocaleString("en-IN", {
-        timeZone: "Asia/Kolkata",
-        dateStyle: "full",
-        timeStyle: "medium",
-      }),
-    };
+    // 2. Check for Resend API delivery if RESEND_API_KEY is configured
+    if (!emailDeliveredDirectly && process.env.RESEND_API_KEY) {
+      try {
+        const htmlEmail = generateQuoteEmailHtml(formDataWithTime);
+        const plainText = generateExecutiveSummary(formDataWithTime);
 
-    let result: any = null;
+        const resendRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          },
+          body: JSON.stringify({
+            from: process.env.RESEND_FROM || "Paper World <quotes@paperworld.co.in>",
+            to: recipientEmail.split(",").map((e) => e.trim()),
+            reply_to: data.email,
+            subject: `🟧 [PAPER WORLD RFQ] ${data.name || "Inquiry"} — ${data.product || "Paper Bags"} (${data.quantity || "Quote"})`,
+            text: plainText,
+            html: htmlEmail,
+          }),
+        });
+
+        if (resendRes.ok) {
+          emailDeliveredDirectly = true;
+          console.info("Direct luxury HTML quote email sent via Resend API successfully.");
+        }
+      } catch (resendErr) {
+        console.warn("Resend delivery failed, falling back to Web3Forms:", resendErr);
+      }
+    }
+
+    // 3. Web3Forms Delivery (Default & Reliable Fallback)
+    const payload = buildWeb3FormsPayload(formDataWithTime, accessKey);
+    let web3Result: any = null;
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -56,17 +116,17 @@ export async function POST(request: Request) {
 
       const contentType = response.headers.get("content-type") || "";
       if (contentType.includes("application/json")) {
-        result = await response.json();
+        web3Result = await response.json();
       } else {
         const text = await response.text().catch(() => "");
-        console.warn("Web3Forms returned non-JSON response from server endpoint:", text.slice(0, 300));
+        console.warn("Web3Forms returned non-JSON response:", text.slice(0, 300));
       }
     } catch (fetchError) {
-      console.warn("Direct server-side fetch to Web3Forms failed:", fetchError);
+      console.warn("Web3Forms submission error:", fetchError);
     }
 
-    // Always log the submission on the server so leads are never lost
-    console.info("[RFQ Inquiry Received]:", {
+    // Log the lead details on the server for zero-data-loss guarantee
+    console.info("[PAPER WORLD RFQ RECEIVED]:", {
       name: data.name,
       company: data.company,
       phone: data.phone,
@@ -75,13 +135,15 @@ export async function POST(request: Request) {
       product: data.product,
       quantity: data.quantity,
       message: data.message,
-      time: new Date().toISOString(),
+      timestamp,
+      emailDeliveredDirectly,
+      web3Success: web3Result?.success,
     });
 
-    if (result && result.success) {
+    if (emailDeliveredDirectly || (web3Result && web3Result.success)) {
       return NextResponse.json({
         success: true,
-        message: result.message || "Quote request submitted successfully!",
+        message: "Your quote request has been delivered to Paper World team!",
       });
     }
 
@@ -89,7 +151,7 @@ export async function POST(request: Request) {
       {
         success: false,
         message:
-          result?.message ||
+          web3Result?.message ||
           "Unable to deliver quote request to email. Please verify your Web3Forms access key or use WhatsApp.",
       },
       { status: 400 }

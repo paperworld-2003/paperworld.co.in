@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, Mail, MapPin, Send, MessageCircle, CheckCircle, AlertTriangle } from "lucide-react";
 import { fadeInUp, slideInLeft, slideInRight } from "@/lib/utils";
+import { buildWeb3FormsPayload } from "@/lib/emailTemplate";
 
 export default function Contact() {
   const [formState, setFormState] = useState({
@@ -103,32 +104,14 @@ export default function Contact() {
       let isSuccess = false;
       let responseMessage = "";
 
-      // 1. Prepare FormData (standard format recommended by Web3Forms for client-side forms)
+      // 1. Prepare FormData with executive orange layout for Web3Forms
+      const payload = buildWeb3FormsPayload(formState, accessKey);
       const formData = new FormData();
-      formData.append("access_key", accessKey);
-      formData.append(
-        "subject",
-        `[NEW RFQ QUOTE] ${formState.name}${formState.company ? ` — ${formState.company}` : ""}`
-      );
-      formData.append("from_name", "Paper World RFQ Portal");
-      formData.append("replyto", formState.email);
-      formData.append("Client Name", formState.name);
-      formData.append("Company / Organization", formState.company || "Not provided");
-      formData.append("Contact Number", formState.phone);
-      formData.append("Email Address", formState.email);
-      formData.append("Industry Sector", formState.industry || "General Retail / Commercial");
-      formData.append("Packaging Category", formState.product || "Custom Specification");
-      formData.append("Estimated Order Quantity", `${formState.quantity} Units`);
-      formData.append("Project Scope & Custom Specifications", formState.message);
-      formData.append("Submitted Via", "Paper World Official Website (https://paperworld.co.in)");
-      formData.append(
-        "Submission Time",
-        new Date().toLocaleString("en-IN", {
-          timeZone: "Asia/Kolkata",
-          dateStyle: "full",
-          timeStyle: "medium",
-        })
-      );
+      Object.entries(payload).forEach(([key, val]) => {
+        if (val !== undefined && val !== null) {
+          formData.append(key, String(val));
+        }
+      });
 
       // Attempt client-side submission to Web3Forms
       try {
