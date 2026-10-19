@@ -85,11 +85,15 @@ export async function POST(request: Request) {
       });
     }
 
-    // If Web3Forms free tier restricted the server IP, we still acknowledge the submission gracefully
-    return NextResponse.json({
-      success: true,
-      message: "Quote request received! Our sales team will get back to you within 24 hours.",
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          result?.message ||
+          "Unable to deliver quote request to email. Please verify your Web3Forms access key or use WhatsApp.",
+      },
+      { status: 400 }
+    );
   } catch (error: any) {
     console.error("Contact API submission error:", error);
     return NextResponse.json(
