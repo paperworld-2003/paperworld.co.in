@@ -388,8 +388,9 @@ export function generateQuoteEmailHtml(data: QuoteFormData): string {
 }
 
 /**
- * Creates the optimized payload for Web3Forms so that
- * the incoming email notification is structured, orange-accented, and executive.
+ * Creates a clean, professional payload for Web3Forms.
+ * Uses clean corporate headers with zero emojis to prevent
+ * email encoding corruption (e.g. 'ÐŸŸ§') and avoid spam triggers.
  */
 export function buildWeb3FormsPayload(data: QuoteFormData, accessKey: string) {
   const time =
@@ -400,30 +401,25 @@ export function buildWeb3FormsPayload(data: QuoteFormData, accessKey: string) {
       timeStyle: "medium",
     });
 
-  const executiveSummary = generateExecutiveSummary(data);
+  const companyText = data.company?.trim() ? ` (${data.company.trim()})` : "";
+  const productText = data.product ? ` - ${data.product}` : "";
 
   return {
     access_key: accessKey,
-    subject: `🟧 [PAPER WORLD RFQ] ${data.name} — ${data.product || "Paper Bags"} (${data.quantity || "Quote"})`,
-    from_name: "Paper World 🟧 Quote Desk",
+    subject: `New Quote Request: ${data.name || "Inquiry"}${companyText}${productText}`,
+    from_name: "Paper World Quote Desk",
     replyto: data.email,
 
-    // Web3Forms highlights the 'message' field as a prominent card in the email!
-    message: executiveSummary,
-
-    // Formatted key-value fields with orange badges for the Web3Forms table
-    "🟧 CLIENT NAME": data.name,
-    "🟧 COMPANY / BRAND": data.company?.trim() ? data.company.trim() : "Independent / Retail",
-    "🟧 PHONE NUMBER": data.phone,
-    "🟧 EMAIL ADDRESS": data.email,
-    "🟧 PACKAGING TYPE": data.product || "Custom Specification",
-    "🟧 ESTIMATED QUANTITY": data.quantity ? `${data.quantity} Bags` : "Custom Volume",
-    "🟧 TARGET INDUSTRY": data.industry || "General Retail / Commercial",
-    "🟧 SUBMITTED AT": `${time} IST`,
-    "🟧 PORTAL SOURCE": "Paper World Official Website (paperworld.co.in)",
-    "🟧 QUICK ACTION (CALL)": `tel:${(data.phone || "").replace(/[^0-9+]/g, "")}`,
-    "🟧 QUICK ACTION (WHATSAPP)": `https://wa.me/919886699009?text=${encodeURIComponent(
-      `Paper World RFQ from ${data.name} (${data.phone}) for ${data.product || "Paper Bags"}`
-    )}`,
+    // Form fields rendered into Web3Forms clean email table
+    "Client Name": data.name || "Not provided",
+    "Company / Organization": data.company?.trim() || "Not provided",
+    "Contact Phone": data.phone || "Not provided",
+    "Email Address": data.email || "Not provided",
+    "Packaging Category": data.product || "Custom Specification",
+    "Estimated Order Volume": data.quantity ? `${data.quantity} Bags` : "Not specified",
+    "Industry Sector": data.industry || "General Retail / Commercial",
+    "Project Requirements": data.message || "Custom paper bag quotation requested.",
+    "Submitted Via": "Paper World Official Website (paperworld.co.in)",
+    "Submission Time": `${time} IST`,
   };
 }

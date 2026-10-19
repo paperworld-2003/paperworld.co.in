@@ -53,11 +53,13 @@ export async function POST(request: Request) {
         const htmlEmail = generateQuoteEmailHtml(formDataWithTime);
         const plainText = generateExecutiveSummary(formDataWithTime);
 
+        const subject = `New Quote Request: ${data.name || "Inquiry"}${data.company ? ` (${data.company})` : ""} - ${data.product || "Paper Bags"}`;
+
         await transporter.sendMail({
           from: `"Paper World Quote Portal" <${smtpUser}>`,
           to: recipientEmail,
           replyTo: data.email,
-          subject: `🟧 [PAPER WORLD RFQ] ${data.name || "Inquiry"} — ${data.product || "Paper Bags"} (${data.quantity || "Quote"})`,
+          subject,
           text: plainText,
           html: htmlEmail,
         });
@@ -74,6 +76,7 @@ export async function POST(request: Request) {
       try {
         const htmlEmail = generateQuoteEmailHtml(formDataWithTime);
         const plainText = generateExecutiveSummary(formDataWithTime);
+        const subject = `New Quote Request: ${data.name || "Inquiry"}${data.company ? ` (${data.company})` : ""} - ${data.product || "Paper Bags"}`;
 
         const resendRes = await fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -85,7 +88,7 @@ export async function POST(request: Request) {
             from: process.env.RESEND_FROM || "Paper World <quotes@paperworld.co.in>",
             to: recipientEmail.split(",").map((e) => e.trim()),
             reply_to: data.email,
-            subject: `🟧 [PAPER WORLD RFQ] ${data.name || "Inquiry"} — ${data.product || "Paper Bags"} (${data.quantity || "Quote"})`,
+            subject,
             text: plainText,
             html: htmlEmail,
           }),
