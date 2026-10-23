@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon, Sun, Menu, X, ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -24,14 +24,17 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const [mounted, setMounted] = useState(false);
   const isScrollingToRef = useRef<string | null>(null);
+
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const currentActive = pathname.startsWith("/products") ? "products" : activeSection;
 
   useEffect(() => {
-    setMounted(true);
-
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
       if (window.scrollY < 50 && !isScrollingToRef.current) {
@@ -82,40 +85,40 @@ export default function Header() {
   return (
     <>
       <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          "fixed left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 w-[95%] max-w-6xl rounded-full",
+          "fixed left-1/2 -translate-x-1/2 z-[100] transition-all duration-300 w-[94%] max-w-7xl rounded-full",
           isScrolled
-            ? "top-4 p-1.5 bg-white/70 dark:bg-black/70 shadow-lg border border-white/50 dark:border-white/10 backdrop-blur-xl"
-            : "top-6 p-2 bg-white/50 dark:bg-black/50 shadow-md border border-white/30 dark:border-white/5 backdrop-blur-xl"
+            ? "top-3 sm:top-4 p-1.5 bg-background/90 dark:bg-black/85 shadow-lg border border-white/50 dark:border-white/10 backdrop-blur-2xl"
+            : "top-4 sm:top-5 p-1.5 sm:p-2 bg-background/70 dark:bg-black/65 shadow-md border border-white/40 dark:border-white/10 backdrop-blur-xl"
         )}
       >
-        <div className="w-full flex items-center justify-between">
+        <div className="w-full flex items-center justify-between pl-3 pr-2 sm:pl-4 sm:pr-2.5 gap-2">
           {/* Logo */}
           <a
             href="#hero"
             onClick={() => handleNavClick("hero")}
-            className="flex items-center gap-2.5 sm:gap-3 group shrink-0"
+            className="flex items-center gap-2 sm:gap-2.5 group shrink-0"
             aria-label="Go to homepage"
           >
             <div
               className={cn(
-                "relative z-10 flex items-center justify-center bg-white rounded-full overflow-hidden shadow-sm shrink-0 transition-all duration-500",
-                isScrolled ? "w-9 h-9" : "w-11 h-11"
+                "relative z-10 flex items-center justify-center bg-white rounded-full overflow-hidden shadow-xs shrink-0 transition-all duration-300",
+                isScrolled ? "w-8 h-8" : "w-8 h-8 sm:w-9 sm:h-9"
               )}
             >
               <Image
                 src="/logo.png"
                 alt="Paper World Logo"
-                width={isScrolled ? 36 : 46}
-                height={isScrolled ? 36 : 46}
-                className="transition-all duration-500 object-contain"
+                width={36}
+                height={36}
+                className="transition-all duration-300 object-contain p-0.5"
                 priority
               />
             </div>
-            <span className="brand-header-logo font-brand font-black text-lg sm:text-xl md:text-2xl tracking-wider uppercase select-none transition-transform duration-300 group-hover:scale-105">
+            <span className="brand-header-logo font-brand font-black text-sm sm:text-base lg:text-lg tracking-wider uppercase select-none transition-transform duration-300 group-hover:scale-105 whitespace-nowrap">
               <span className="text-primary font-black">PAPER</span>{" "}
               <span className="text-foreground font-black">WORLD</span>
             </span>
@@ -123,7 +126,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav
-            className="hidden xl:flex items-center gap-1"
+            className="hidden xl:flex items-center gap-0.5 lg:gap-1 bg-black/5 dark:bg-white/5 px-2 py-1 rounded-full border border-black/5 dark:border-white/5 shrink-0"
             role="navigation"
             aria-label="Main navigation"
           >
@@ -135,17 +138,17 @@ export default function Header() {
                   if (pathname === "/") handleNavClick(id);
                 }}
                 className={cn(
-                  "relative px-3.5 py-2 text-[13px] font-medium transition-colors duration-300 rounded-lg tracking-wide",
+                  "relative px-2.5 lg:px-3 py-1.5 text-xs lg:text-[13px] font-semibold transition-all duration-200 rounded-full tracking-wide whitespace-nowrap",
                   currentActive === id
-                    ? "text-primary"
-                    : "text-foreground/60 hover:text-foreground"
+                    ? "text-primary font-bold"
+                    : "text-foreground/75 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10"
                 )}
               >
                 {label}
                 {currentActive === id && (
                   <motion.div
                     layoutId="activeNav"
-                    className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-[2px] bg-primary rounded-full"
+                    className="absolute inset-0 rounded-full bg-primary/10 -z-10"
                     transition={{
                       type: "spring",
                       stiffness: 380,
@@ -158,11 +161,11 @@ export default function Header() {
           </nav>
 
           {/* Right Side */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="relative p-2.5 rounded-full border border-border text-foreground hover:border-primary/50 transition-all duration-300 flex items-center justify-center"
+              className="relative p-2 rounded-full border border-border/80 text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 flex items-center justify-center cursor-pointer shrink-0"
               aria-label="Toggle theme"
             >
               <AnimatePresence mode="wait">
@@ -172,9 +175,9 @@ export default function Header() {
                     initial={{ rotate: 90, opacity: 0, scale: 0.5 }}
                     animate={{ rotate: 0, opacity: 1, scale: 1 }}
                     exit={{ rotate: -90, opacity: 0, scale: 0.5 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <Moon className="w-5 h-5" />
+                    <Moon className="w-4 h-4 text-amber-300" />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -182,34 +185,34 @@ export default function Header() {
                     initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
                     animate={{ rotate: 0, opacity: 1, scale: 1 }}
                     exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <Sun className="w-5 h-5" />
+                    <Sun className="w-4 h-4 text-amber-500" />
                   </motion.div>
                 )}
               </AnimatePresence>
             </button>
 
-            {/* Get Quote Button - Desktop */}
+            {/* Request a Quote Button - Desktop */}
             <a
               href="#contact"
               onClick={() => handleNavClick("contact")}
-              className="hidden md:flex items-center justify-center gap-2 px-8 py-3 bg-primary text-white rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 shadow-md whitespace-nowrap shrink-0"
+              className="hidden md:inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#D97028] hover:bg-[#C2631F] text-white rounded-full text-xs font-bold tracking-wider uppercase transition-all hover:scale-105 active:scale-95 shadow-sm whitespace-nowrap shrink-0 group"
             >
-              Get Quote
-              <ArrowRight className="w-4 h-4" />
+              <span className="text-white">Request a Quote</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white transition-transform duration-300 group-hover:translate-x-1" />
             </a>
 
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="xl:hidden p-2.5 rounded-xl border border-border text-foreground transition-colors"
+              className="xl:hidden p-2 rounded-full border border-border/80 text-foreground hover:border-primary/50 transition-colors shrink-0 cursor-pointer"
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? (
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               ) : (
-                <Menu className="w-5 h-5" />
+                <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
             </button>
           </div>
@@ -224,9 +227,8 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-[99] bg-white/95 dark:bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-5"
+            className="fixed inset-0 z-[99] bg-background/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-5 p-6"
           >
-
             {navItems.map(({ label, id }, index) => (
               <motion.a
                 key={id}
@@ -239,10 +241,10 @@ export default function Header() {
                   setIsMobileMenuOpen(false);
                 }}
                 className={cn(
-                  "text-2xl font-heading font-semibold transition-colors",
+                  "text-2xl font-heading font-bold transition-colors",
                   currentActive === id
                     ? "text-primary"
-                    : "text-foreground/70"
+                    : "text-foreground/80 hover:text-foreground"
                 )}
               >
                 {label}
@@ -251,16 +253,16 @@ export default function Header() {
             <motion.a
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.45 }}
               href="#contact"
               onClick={() => {
                 handleNavClick("contact");
                 setIsMobileMenuOpen(false);
               }}
-              className="mt-6 flex items-center gap-2 px-8 py-3.5 bg-primary text-white rounded-xl text-lg font-semibold shadow-lg shadow-primary/20"
+              className="mt-6 flex items-center gap-2 px-8 py-3.5 bg-[#D97028] hover:bg-[#C2631F] text-white rounded-full text-base font-bold shadow-sm"
             >
-              Get Quote
-              <ArrowRight className="w-5 h-5" />
+              <span className="text-white">Request a Quote</span>
+              <ArrowRight className="w-5 h-5 text-white" />
             </motion.a>
           </motion.div>
         )}

@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
+import SmoothScroll from "@/components/effects/SmoothScroll";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 // Dynamically load below-the-fold sections for instant FCP/LCP and 100% Lighthouse Performance
@@ -20,24 +21,26 @@ const Contact = dynamic(() => import("@/components/sections/Contact"));
 export default function Home() {
   return (
     <ThemeProvider>
-      <Header />
+      <SmoothScroll>
+        <Header />
 
-      <main className="relative z-10 w-full overflow-x-clip">
-        <Hero />
-        <About />
-        <WhyPaperBags />
-        <Products />
-        <Customization />
-        <Manufacturing />
-        <Industries />
-        <Sustainability />
-        <Clients />
-        <Testimonials />
-        <FAQ />
-        <Contact />
-      </main>
+        <main className="relative z-10 w-full overflow-x-clip">
+          <Hero />
+          <About />
+          <WhyPaperBags />
+          <Products />
+          <Customization />
+          <Manufacturing />
+          <Industries />
+          <Sustainability />
+          <Clients />
+          <Testimonials />
+          <FAQ />
+          <Contact />
+        </main>
 
-      <Footer />
+        <Footer />
+      </SmoothScroll>
     </ThemeProvider>
   );
 }
